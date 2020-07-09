@@ -1,0 +1,215 @@
+<html>
+
+<head>
+
+    <style>
+        .todos {
+            -moz-box-shadow: 0 4px 16px #aaa;
+            -webkit-box-shadow: 0 4px 16px #aaa;
+            box-shadow: 0 4px 16px #aaa;
+            width: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0px auto;
+            border-top: solid 8px teal;
+            min-height: 40vh;
+            background-color: #FFF;
+            transform: translateY(50%);
+        }
+        
+        .input {
+            font-family: Montserrat;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 1.2rem;
+            width: 100%;
+            color: #000;
+            outline: 0;
+            border: 0;
+            padding: 1.2rem 5.2rem 1.2rem 2.8rem;
+            border-radius: 10px;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        }
+        
+        label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        .styled-checkbox {
+            position: absolute;
+            opacity: 0;
+        }
+        
+        .styled-checkbox+label {
+            position: relative;
+            cursor: pointer;
+            padding: 0;
+        }
+        
+        .styled-checkbox+label:before {
+            content: '';
+            margin-right: 10px;
+            display: inline-block;
+            vertical-align: text-top;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 1px solid #b8b8b8;
+        }
+        
+        .styled-checkbox:hover+label:before {
+            background: #f35429;
+        }
+        
+        .styled-checkbox:focus+label:before {
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+        }
+        
+        .styled-checkbox:checked+label:before {
+            background: #f35429;
+        }
+        
+        .styled-checkbox:disabled+label {
+            color: #b8b8b8;
+            cursor: auto;
+        }
+        
+        .styled-checkbox:disabled+label:before {
+            box-shadow: none;
+            background: #ddd;
+        }
+        
+        .styled-checkbox:checked+label:after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 9px;
+            background: white;
+            width: 2px;
+            height: 2px;
+            box-shadow: 2px 0 0 white, 4px 0 0 white, 4px -2px 0 white, 4px -4px 0 white, 4px -6px 0 white, 4px -8px 0 white;
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+        
+        .fifth {
+            border-color: #8e44ad;
+            border-radius: 0;
+            color: #8e44ad;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            -webkit-transition: color 150ms ease-in-out;
+            transition: color 150ms ease-in-out;
+        }
+        
+        .btn {
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-color: transparent;
+            border: 2px solid #e74c3c;
+            border-radius: 0.6em;
+            color: #e74c3c;
+            cursor: pointer;
+            display: -webkit-box;
+            display: flex;
+            align-self: center;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1;
+            margin: 20px auto;
+            padding: 1.2em 2.8em;
+            text-decoration: none;
+            text-align: center;
+            text-transform: uppercase;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="app">
+        <div style="min-height:100vh" v-bind:style="{ 'background-color': bgColor }">
+            <div class="todos">
+                <div>
+                    <color v-for="({ name, value }, index) in colors" @changeColor="setNewColor" :name="name " :value="value " :key="index ">
+                        </todos>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js "></script>
+    <script>
+        let color = {
+            name: 'color',
+            props: {
+                value: Number,
+                name: String
+            },
+            computed: {
+                currentValue: {
+                    get() {
+                        return this.value
+                    },
+                    set(value) {
+                        this.$emit('changecolor', this.name, value);
+                        return value
+                    }
+
+                }
+            },
+            template: `<div>
+            <i>{{ name }}</i>
+            <input type="number" v-model.number="currentValue" min="0" max="255">
+            <input v-model.number="currentValue"  type="range" min="0" max="255" step="1"></div>`
+        }
+        const app = new Vue({
+            el: '#app',
+            data: {
+                colors: [{
+                    name: 'R',
+                    value: 255
+                }, {
+                    name: 'G',
+                    value: 255
+                }, {
+                    name: 'B',
+                    value: 255
+                }]
+            },
+            components: {
+                color
+            },
+            computed: {
+                bgColor: function() {
+                    let colorString = ''
+                    this.colors.forEach((color, index) => {
+                        colorString += index !== this.colors.length - 1 ? color.value + ',' : color.value
+                    })
+                    return `rgb(${colorString})`
+                }
+            },
+
+            methods: {
+                setNewColor(name, value) {
+                    let index = this.colors.findIndex(color => color.name === name);
+                    this.colors[index].value = value
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
